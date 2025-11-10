@@ -5,12 +5,12 @@ import { useEffect } from "react";
 export function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => 1 - Math.pow(1 - t, 3), // Easing suave e natural
+      duration: 0.6,  // Reduzido de 1.2 para 0.6 - rolagem mais rápida
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Easing mais responsivo
       direction: 'vertical',
       gestureDirection: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1.0,   // Multiplicador padrão para rolagem natural
+      wheelMultiplier: 1.8,   // Aumentado de 1.0 para 1.8 - rolagem mais rápida
       smoothTouch: false,     // Desabilitado em mobile para melhor performance
       infinite: false,
     });

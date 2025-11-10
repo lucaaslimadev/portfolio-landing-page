@@ -16,7 +16,7 @@ export function AnchorScrollEnhancer() {
       if (lenis?.scrollTo) {
         lenis.scrollTo(target, { 
           offset: -80, 
-          duration: 0.8, 
+          duration: 0.5,  // Reduzido de 0.8 para 0.5 - navegação mais rápida
           easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
         });
       } else {
