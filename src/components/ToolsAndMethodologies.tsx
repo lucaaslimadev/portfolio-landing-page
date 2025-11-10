@@ -138,26 +138,26 @@ export function ToolsAndMethodologies() {
                           <div className={`absolute -inset-0.5 bg-gradient-to-br ${tool.gradient} rounded-2xl opacity-0 group-hover:opacity-60 blur-xl transition-opacity duration-500`} />
                           
                           {/* Card content */}
-                          <div className="relative bg-navy-800/40 backdrop-blur-xl border border-white/10 rounded-2xl p-8 md:p-10 shadow-professional hover:border-white/20 transition-all duration-300 h-full flex flex-col items-center justify-between">
+                          <div className="relative bg-navy-800/40 backdrop-blur-xl border border-white/10 rounded-2xl p-8 md:p-10 shadow-professional hover:border-white/20 transition-all duration-300 h-full flex flex-col items-center">
                             {/* Icon - Altura fixa e padronizada */}
-                            <div className="flex justify-center items-center flex-shrink-0 h-[80px] md:h-[96px] w-full">
+                            <div className="flex justify-center items-center flex-shrink-0 h-[80px] md:h-[96px] w-full mb-4">
                               <div className={`w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-xl bg-gradient-to-br ${tool.gradient} border-2 border-white/40 shadow-lg group-hover:scale-110 group-hover:shadow-2xl transition-all duration-300`}>
                                 <IconComponent className={`h-10 w-10 md:h-12 md:w-12 ${tool.iconColor} drop-shadow-lg flex-shrink-0`} strokeWidth={2.5} />
                               </div>
                             </div>
                             
                             {/* Title - Altura fixa */}
-                            <h3 className="font-bold text-lg md:text-xl lg:text-2xl flex-shrink-0 text-center h-[5rem] md:h-[6rem] flex items-center justify-center leading-tight px-2 w-full">
+                            <h3 className="font-bold text-lg md:text-xl lg:text-2xl flex-shrink-0 text-center h-[5rem] md:h-[6rem] flex items-center justify-center leading-tight px-2 w-full mb-4">
                               {tool.title}
                             </h3>
                             
                             {/* Description - Altura fixa e centralizada */}
-                            <p className="text-white/60 text-sm md:text-base flex-shrink-0 text-center leading-relaxed px-2 h-[3.5rem] md:h-[4rem] flex items-center justify-center w-full">
+                            <p className="text-white/60 text-sm md:text-base flex-shrink-0 text-center leading-relaxed px-2 h-[3.5rem] md:h-[4rem] flex items-center justify-center w-full mb-6">
                               {tool.description}
                             </p>
                             
                             {/* Items - Altura fixa e centralizada */}
-                            <div className="flex-shrink-0 w-full min-h-[3rem] flex items-center justify-center">
+                            <div className="flex-shrink-0 w-full mt-auto flex items-center justify-center">
                               <div className="flex flex-wrap gap-2 justify-center">
                                 {tool.items.map((item) => (
                                   <motion.span
