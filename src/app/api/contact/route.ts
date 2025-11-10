@@ -38,11 +38,30 @@ export async function POST(req: Request) {
   }
 
   // Tentar enviar email se Resend estiver configurado
-  if (resend && process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL && process.env.RESEND_TO_EMAIL) {
+  let emailSent = false;
+  let emailError: any = null;
+
+  // Verificar se todas as variáveis estão configuradas
+  const hasResendConfig = 
+    process.env.RESEND_API_KEY && 
+    process.env.RESEND_FROM_EMAIL && 
+    process.env.RESEND_TO_EMAIL;
+
+  console.log("🔍 Verificando configuração do Resend:", {
+    hasApiKey: !!process.env.RESEND_API_KEY,
+    hasFromEmail: !!process.env.RESEND_FROM_EMAIL,
+    hasToEmail: !!process.env.RESEND_TO_EMAIL,
+    fromEmail: process.env.RESEND_FROM_EMAIL,
+    toEmail: process.env.RESEND_TO_EMAIL
+  });
+
+  if (resend && hasResendConfig) {
     try {
-      await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL,
-        to: process.env.RESEND_TO_EMAIL,
+      console.log("📤 Tentando enviar email via Resend...");
+      
+      const result = await resend.emails.send({
+        from: process.env.RESEND_FROM_EMAIL!,
+        to: process.env.RESEND_TO_EMAIL!,
         replyTo: data.email,
         subject: `Novo contato do portfólio - ${data.name}`,
         html: `
@@ -65,10 +84,28 @@ export async function POST(req: Request) {
           </div>
         `,
       });
-      console.log("✅ Email enviado com sucesso para:", process.env.RESEND_TO_EMAIL);
-    } catch (emailError) {
+      
+      console.log("📬 Resposta do Resend:", JSON.stringify(result, null, 2));
+      
+      if (result.error) {
+        emailError = {
+          message: result.error.message || "Erro desconhecido do Resend",
+          name: result.error.name,
+          statusCode: result.error.statusCode
+        };
+        console.error("❌ Erro do Resend:", emailError);
+      } else if (result.data) {
+        emailSent = true;
+        console.log("✅ Email enviado com sucesso! ID:", result.data.id);
+        console.log("📧 Para:", process.env.RESEND_TO_EMAIL);
+      }
+    } catch (error: any) {
+      emailError = {
+        message: error.message || "Erro ao enviar email",
+        name: error.name,
+        stack: error.stack
+      };
       console.error("❌ Erro ao enviar email:", emailError);
-      // Continua mesmo se o email falhar, para não quebrar a experiência do usuário
     }
   } else {
     // Se não tiver Resend configurado, apenas loga (útil para desenvolvimento)
@@ -77,11 +114,21 @@ export async function POST(req: Request) {
     console.log("Email:", data.email);
     console.log("Mensagem:", data.message);
     console.log("\n⚠️ Para receber emails, configure as variáveis de ambiente:");
-    console.log("  - RESEND_API_KEY");
-    console.log("  - RESEND_FROM_EMAIL");
-    console.log("  - RESEND_TO_EMAIL");
+    console.log("  - RESEND_API_KEY:", !!process.env.RESEND_API_KEY);
+    console.log("  - RESEND_FROM_EMAIL:", !!process.env.RESEND_FROM_EMAIL);
+    console.log("  - RESEND_TO_EMAIL:", !!process.env.RESEND_TO_EMAIL);
   }
 
-  return NextResponse.json({ ok: true });
+  // Retornar sucesso mesmo se o email falhar (para não quebrar UX)
+  // Mas incluir informação sobre o status do email
+  return NextResponse.json({ 
+    ok: true, 
+    emailSent,
+    emailError: emailError ? {
+      message: emailError.message || String(emailError),
+      name: emailError.name,
+      statusCode: emailError.statusCode
+    } : null
+  });
 }
 

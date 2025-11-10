@@ -34,11 +34,27 @@ export function Contact() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
       });
-      if (!res.ok) throw new Error("Falha ao enviar");
+      
+      const result = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(result.error || "Falha ao enviar");
+      }
+      
+      // Verificar se houve erro no envio do email (mas formulário foi processado)
+      if (result.emailError) {
+        console.error("Erro ao enviar email:", result.emailError);
+        // Ainda mostra sucesso, mas loga o erro
+      }
+      
       reset();
       setToast({ message: "Mensagem enviada com sucesso! Retornarei em breve.", type: "success" });
-    } catch {
-      setToast({ message: "Não foi possível enviar agora. Tente novamente em instantes.", type: "error" });
+    } catch (error: any) {
+      console.error("Erro ao enviar formulário:", error);
+      setToast({ 
+        message: error.message || "Não foi possível enviar agora. Tente novamente em instantes.", 
+        type: "error" 
+      });
     }
   }
 
