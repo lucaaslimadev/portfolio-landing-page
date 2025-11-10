@@ -7,12 +7,8 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
     const lenis = new Lenis({
       duration: 0.6,  // Reduzido de 1.2 para 0.6 - rolagem mais rápida
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Easing mais responsivo
-      direction: 'vertical',
-      gestureDirection: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1.8,   // Aumentado de 1.0 para 1.8 - rolagem mais rápida
-      smoothTouch: false,     // Desabilitado em mobile para melhor performance
-      infinite: false,
     });
     
     // Expõe para outros componentes (anchors)

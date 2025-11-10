@@ -14,7 +14,7 @@ export function MagneticButton({
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const rotate = useTransform([x, y], ([latestX, latestY]) => (latestX + latestY) / 15);
+  const rotate = useTransform([x, y], ([latestX, latestY]: number[]) => (latestX + latestY) / 15);
 
   function handleMouseMove(e: React.MouseEvent) {
     if (!ref.current) return;
